@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Médico - APH Exams</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --light: #f8fafc;
+            --dark: #1e293b;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f1f5f9;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .nav-links button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--secondary);
+            font-weight: 500;
+        }
+        
+        .nav-links button:hover {
+            color: var(--primary);
+        }
+        
+        .auth-section {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        h1, h2, h3 {
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+        
+        form {
+            display: grid;
+            gap: 1rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        label {
+            font-weight: 500;
+        }
+        
+        input, select, textarea {
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #dc2626;
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #059669;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: #f8fafc;
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background-color: #f1f5f9;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .alert {
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+        
+        .alert-success {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        
+        .alert-error {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+        
+        .section {
+            margin-bottom: 2rem;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .patient-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .patient-card h3 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .patient-detail {
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .patient-detail strong {
+            color: var(--secondary);
+        }
+        
+        .search-box {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .search-box input {
+            flex: 1;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .status-scheduled {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .status-completed {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        
+        .status-pending {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        
+        .status-canceled {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">Sistema Médico - APH Exams</div>
+                <div class="nav-links">
+                    <button onclick="showSection('patients')">Pacientes</button>
+                    <button onclick="showSection('logs')">Logs</button>
+                </div>
+                <div class="auth-section">
+                    <span id="user-info" class="hidden"></span>
+                    <button id="logout-btn" class="hidden" onclick="logout()">Sair</button>
+                    <button id="login-btn" onclick="showSection('login')">Login</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div id="alert-box"></div>
+
+        <!-- Login Section -->
+        <section id="login-section" class="section">
+            <div class="card">
+                <h2>Login</h2>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="username">Usuário:</label>
+                        <input type="text" id="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Senha:</label>
+                        <input type="password" id="password" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Entrar</button>
+                </form>
+                <div style="margin-top: 1rem; padding: 1rem; background-color: #f1f5f9; border-radius: 4px;">
+                    <p><strong>Usuários de teste (baseado no seu schema):</strong></p>
+                    <p>Usuário: <code>admin</code> | Senha: <code>admin123</code></p>
+                    <p>Usuário: <code>medico</code> | Senha: <code>medico123</code></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Patients Section -->
+        <section id="patients-section" class="section hidden">
+            <div class="card">
+                <h2>Gerenciar Pacientes</h2>
+                <button class="btn-primary" onclick="showPatientForm()">Adicionar Novo Paciente</button>
+                
+                <div class="search-box">
+                    <input type="text" id="search-patient" placeholder="Buscar paciente por nome ou CPF..." oninput="filterPatients()">
+                    <select id="filter-status" onchange="filterPatients()">
+                        <option value="">Todos os status</option>
+                        <option value="AGENDADO">Agendado</option>
+                        <option value="REALIZADO">Realizado</option>
+                        <option value="PENDENTE">Pendente</option>
+                        <option value="CANCELADO">Cancelado</option>
+                    </select>
+                </div>
+                
+                <div id="patient-form" class="hidden">
+                    <h3 id="form-title">Adicionar Paciente</h3>
+                    <form id="patient-data-form">
+                        <input type="hidden" id="patient-id">
+                        <div class="grid">
+                            <div class="form-group">
+                                <label for="name">Nome completo:</label>
+                                <input type="text" id="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="cpf">CPF:</label>
+                                <input type="text" id="cpf" required pattern="\d{3}\.\d{3}\.\d{3}-\d{2}" placeholder="000.000.000-00">
+                            </div>
+                            <div class="form-group">
+                                <label for="birthDate">Data de Nascimento:</label>
+                                <input type="date" id="birthDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="motherName">Nome da Mãe:</label>
+                                <input type="text" id="motherName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Telefone:</label>
+                                <input type="tel" id="phone" required placeholder="(00) 00000-0000">
+                            </div>
+                            <div class="form-group">
+                                <label for="examType">Tipo de Exame:</label>
+                                <select id="examType" required>
+                                    <option value="">Selecione o tipo de exame</option>
+                                    <option value="ELETROCARDIOGRAMA">Eletrocardiograma</option>
+                                    <option value="ECOCARDIOGRAMA">Ecocardiograma</option>
+                                    <option value="TESTE_ESFORCO">Teste de Esforço</option>
+                                    <option value="MAPA">MAPA</option>
+                                    <option value="HOLTER">Holter</option>
+                                    <option value="ANGIOTOMOGRAFIA">Angiotomografia</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="status">Status:</label>
+                                <select id="status" required>
+                                    <option value="">Selecione o status</option>
+                                    <option value="AGENDADO">Agendado</option>
+                                    <option value="REALIZADO">Realizado</option>
+                                    <option value="PENDENTE">Pendente</option>
+                                    <option value="CANCELADO">Cancelado</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="examDate">Data do Exame:</label>
+                                <input type="datetime-local" id="examDate">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="protocol">Protocolo/Número do Exame:</label>
+                            <input type="text" id="protocol">
+                        </div>
+                        <button type="submit" class="btn-primary">Salvar</button>
+                        <button type="button" class="btn-danger" onclick="hidePatientForm()">Cancelar</button>
+                    </form>
+                </div>
+                
+                <h3>Lista de Pacientes</h3>
+                <div id="patients-list">
+                    <p>Carregando pacientes...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Logs Section -->
+        <section id="logs-section" class="section hidden">
+            <div class="card">
+                <h2>Logs do Sistema</h2>
+                <div class="search-box">
+                    <input type="text" id="search-log" placeholder="Buscar em logs..." oninput="filterLogs()">
+                    <select id="filter-action" onchange="filterLogs()">
+                        <option value="">Todas as ações</option>
+                        <option value="INSERT">Inserções</option>
+                        <option value="UPDATE">Atualizações</option>
+                        <option value="DELETE">Exclusões</option>
+                    </select>
+                </div>
+                <div id="logs-list">
+                    <p>Carregando logs...</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:3000'; // Altere para sua URL da API
+        let token = localStorage.getItem('token');
+        let currentUser = null;
+        let allPatients = [];
+        let allLogs = [];
+
+        // Elementos da interface
+        const sections = {
+            login: document.getElementById('login-section'),
+            patients: document.getElementById('patients-section'),
+            logs: document.getElementById('logs-section')
+        };
+
+        const authElements = {
+            userInfo: document.getElementById('user-info'),
+            logoutBtn: document.getElementById('logout-btn'),
+            loginBtn: document.getElementById('login-btn')
+        };
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            // Configurar event listeners
+            document.getElementById('login-form').addEventListener('submit', handleLogin);
+            document.getElementById('patient-data-form').addEventListener('submit', handlePatientSubmit);
+            
+            // Configurar máscaras para os campos
+            document.getElementById('cpf').addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 11) value = value.slice(0, 11);
+                
+                if (value.length <= 11) {
+                    value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                    value = value.replace(/(\d{3})\.(\d{3})(\d)/, '$1.$2.$3');
+                    value = value.replace(/(\d{3})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3-$4');
+                }
+                
+                e.target.value = value;
+            });
+            
+            document.getElementById('phone').addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 11) value = value.slice(0, 11);
+                
+                if (value.length <= 11) {
+                    if (value.length <= 2) {
+                        value = value.replace(/(\d+)/, '($1');
+                    } else if (value.length <= 6) {
+                        value = value.replace(/(\d{2})(\d+)/, '($1) $2');
+                    } else if (value.length <= 10) {
+                        value = value.replace(/(\d{2})(\d{4})(\d+)/, '($1) $2-$3');
+                    } else {
+                        value = value.replace(/(\d{2})(\d{5})(\d+)/, '($1) $2-$3');
+                    }
+                }
+                
+                e.target.value = value;
+            });
+            
+            // Verificar se já está logado
+            if (token) {
+                try {
+                    const payload = JSON.parse(atob(token.split('.')[1]));
+                    if (payload.exp * 1000 > Date.now()) {
+                        currentUser = payload;
+                        updateAuthUI();
+                        showSection('patients');
+                        loadPatients();
+                    } else {
+                        // Token expirado
+                        localStorage.removeItem('token');
+                        token = null;
+                        showSection('login');
+                    }
+                } catch (e) {
+                    localStorage.removeItem('token');
+                    token = null;
+                    showSection('login');
+                }
+            } else {
+                showSection('login');
+            }
+        });
+
+        // Funções de UI
+        function showSection(sectionName) {
+            // Esconder todas as seções
+            Object.values(sections).forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // Mostrar a seção solicitada
+            sections[sectionName].classList.remove('hidden');
+            
+            // Carregar dados se necessário
+            if (sectionName === 'patients' && token) {
+                loadPatients();
+            } else if (sectionName === 'logs' && token) {
+                loadLogs();
+            }
+        }
+
+        function updateAuthUI() {
+            if (token && currentUser) {
+                authElements.userInfo.textContent = `Olá, ${currentUser.username} (${currentUser.role})`;
+                authElements.userInfo.classList.remove('hidden');
+                authElements.logoutBtn.classList.remove('hidden');
+                authElements.loginBtn.classList.add('hidden');
+            } else {
+                authElements.userInfo.classList.add('hidden');
+                authElements.logoutBtn.classList.add('hidden');
+                authElements.loginBtn.classList.remove('hidden');
+            }
+        }
+
+        function showAlert(message, type = 'success') {
+            const alertBox = document.getElementById('alert-box');
+            alertBox.innerHTML = `
+                <div class="alert alert-${type}">
+                    ${message}
+                </div>
+            `;
+            
+            setTimeout(() => {
+                alertBox.innerHTML = '';
+            }, 5000);
+        }
+
+        // Funções de API
+        async function apiRequest(url, options = {}) {
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...options.headers
+                },
+                ...options
+            };
+            
+            if (token) {
+                config.headers.Authorization = `Bearer ${token}`;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}${url}`, config);
+                
+                if (response.status === 401) {
+                    // Token inválido ou expirado
+                    logout();
+                    throw new Error('Sessão expirada. Faça login novamente.');
+                }
+                
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Erro na requisição');
+                }
+                
+                return await response.json();
+            } catch (error) {
+                showAlert(error.message, 'error');
+                throw error;
+            }
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                const data = await apiRequest('/api/auth/login', {
+                    method: 'POST',
+                    body: JSON.stringify({ username, password })
+                });
+                
+                token = data.token;
+                localStorage.setItem('token', token);
+                
+                // Decodificar o token para obter informações do usuário
+                const payload = JSON.parse(atob(token.split('.')[1]));
+                currentUser = payload;
+                
+                updateAuthUI();
+                showSection('patients');
+                loadPatients();
+                
+                showAlert('Login realizado com sucesso!');
+            } catch (error) {
+                console.error('Erro no login:', error);
+            }
+        }
+
+        function logout() {
+            token = null;
+            currentUser = null;
+            localStorage.removeItem('token');
+            updateAuthUI();
+            showSection('login');
+            showAlert('Logout realizado com sucesso.');
+        }
+
+        async function loadPatients() {
+            try {
+                const patients = await apiRequest('/api/patients');
+                allPatients = patients;
+                renderPatients(patients);
+            } catch (error) {
+                document.getElementById('patients-list').innerHTML = `
+                    <p>Erro ao carregar pacientes: ${error.message}</p>
+                `;
+            }
+        }
+
+        function renderPatients(patients) {
+            const patientsList = document.getElementById('patients-list');
+            
+            if (patients.length === 0) {
+                patientsList.innerHTML = '<p>Nenhum paciente encontrado.</p>';
+                return;
+            }
+            
+            patientsList.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>CPF</th>
+                            <th>Exame</th>
+                            <th>Status</th>
+                            <th>Data do Exame</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${patients.map(patient => `
+                            <tr>
+                                <td>${patient.name}</td>
+                                <td>${patient.cpf}</td>
+                                <td>${patient.examType}</td>
+                                <td>
+                                    <span class="status-badge status-${patient.status.toLowerCase()}">
+                                        ${patient.status}
+                                    </span>
+                                </td>
+                                <td>${patient.examDate ? new Date(patient.examDate).toLocaleString('pt-BR') : 'Não agendado'}</td>
+                                <td>
+                                    <button class="btn-primary" onclick="editPatient('${patient.cpf}')">Editar</button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        function filterPatients() {
+            const searchTerm = document.getElementById('search-patient').value.toLowerCase();
+            const statusFilter = document.getElementById('filter-status').value;
+            
+            let filteredPatients = allPatients;
+            
+            if (searchTerm) {
+                filteredPatients = filteredPatients.filter(patient => 
+                    patient.name.toLowerCase().includes(searchTerm) || 
+                    patient.cpf.includes(searchTerm)
+                );
+            }
+            
+            if (statusFilter) {
+                filteredPatients = filteredPatients.filter(patient => 
+                    patient.status === statusFilter
+                );
+            }
+            
+            renderPatients(filteredPatients);
+        }
+
+        function showPatientForm() {
+            document.getElementById('patient-form').classList.remove('hidden');
+            document.getElementById('form-title').textContent = 'Adicionar Paciente';
+            document.getElementById('patient-data-form').reset();
+            document.getElementById('patient-id').value = '';
+        }
+
+        function hidePatientForm() {
+            document.getElementById('patient-form').classList.add('hidden');
+        }
+
+        async function editPatient(cpf) {
+            try {
+                const patient = await apiRequest(`/api/patients/${cpf}`);
+                
+                // Preencher o formulário com os dados do paciente
+                document.getElementById('patient-id').value = patient.id;
+                document.getElementById('name').value = patient.name;
+                document.getElementById('cpf').value = patient.cpf;
+                document.getElementById('birthDate').value = patient.birthDate.split('T')[0];
+                document.getElementById('motherName').value = patient.motherName;
+                document.getElementById('phone').value = patient.phone;
+                document.getElementById('examType').value = patient.examType;
+                document.getElementById('status').value = patient.status;
+                document.getElementById('examDate').value = patient.examDate ? patient.examDate.replace(' ', 'T').substring(0, 16) : '';
+                document.getElementById('protocol').value = patient.protocol || '';
+                
+                document.getElementById('patient-form').classList.remove('hidden');
+                document.getElementById('form-title').textContent = 'Editar Paciente';
+            } catch (error) {
+                console.error('Erro ao carregar paciente:', error);
+            }
+        }
+
+        async function handlePatientSubmit(e) {
+            e.preventDefault();
+            
+            const patientId = document.getElementById('patient-id').value;
+            const patientData = {
+                name: document.getElementById('name').value,
+                cpf: document.getElementById('cpf').value.replace(/\D/g, ''),
+                birthDate: document.getElementById('birthDate').value,
+                motherName: document.getElementById('motherName').value,
+                phone: document.getElementById('phone').value.replace(/\D/g, ''),
+                examType: document.getElementById('examType').value,
+                status: document.getElementById('status').value,
+                examDate: document.getElementById('examDate').value,
+                protocol: document.getElementById('protocol').value
+            };
+            
+            try {
+                if (patientId) {
+                    // Editar paciente existente
+                    await apiRequest(`/api/patients/${patientData.cpf}`, {
+                        method: 'PUT',
+                        body: JSON.stringify(patientData)
+                    });
+                    showAlert('Paciente atualizado com sucesso!');
+                } else {
+                    // Adicionar novo paciente
+                    await apiRequest('/api/patients', {
+                        method: 'POST',
+                        body: JSON.stringify(patientData)
+                    });
+                    showAlert('Paciente adicionado com sucesso!');
+                }
+                
+                hidePatientForm();
+                loadPatients();
+            } catch (error) {
+                console.error('Erro ao salvar paciente:', error);
+            }
+        }
+
+        async function loadLogs() {
+            try {
+                const logs = await apiRequest('/api/logs');
+                allLogs = logs;
+                renderLogs(logs);
+            } catch (error) {
+                document.getElementById('logs-list').innerHTML = `
+                    <p>Erro ao carregar logs: ${error.message}</p>
+                `;
+            }
+        }
+
+        function renderLogs(logs) {
+            const logsList = document.getElementById('logs-list');
+            
+            if (logs.length === 0) {
+                logsList.innerHTML = '<p>Nenhum log encontrado.</p>';
+                return;
+            }
+            
+            logsList.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Data/Hora</th>
+                            <th>Usuário</th>
+                            <th>Ação</th>
+                            <th>Detalhes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${logs.map(log => `
+                            <tr>
+                                <td>${new Date(log.timestamp).toLocaleString('pt-BR')}</td>
+                                <td>${log.user?.username || 'N/A'}</td>
+                                <td>${log.action}</td>
+                                <td>${log.detail}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        function filterLogs() {
+            const searchTerm = document.getElementById('search-log').value.toLowerCase();
+            const actionFilter = document.getElementById('filter-action').value;
+            
+            let filteredLogs = allLogs;
+            
+            if (searchTerm) {
+                filteredLogs = filteredLogs.filter(log => 
+                    log.detail.toLowerCase().includes(searchTerm) || 
+                    (log.user?.username && log.user.username.toLowerCase().includes(searchTerm))
+                );
+            }
+            
+            if (actionFilter) {
+                filteredLogs = filteredLogs.filter(log => 
+                    log.action === actionFilter
+                );
+            }
+            
+            renderLogs(filteredLogs);
+        }
+    </script>
+</body>
+</html>
